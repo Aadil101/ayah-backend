@@ -11,14 +11,14 @@ const (
 
 type backendTextType struct {
 	ID         string
-	Name       string
+	Label      string
 	ResourceID string
 }
 
 var backendTextTypes = []backendTextType{
-	{ID: "Imlaei", Name: "Imlaei", ResourceID: "text_imlaei"},
-	{ID: "Indopak", Name: "Indopak", ResourceID: "text_indopak"},
-	{ID: "Uthmani", Name: "Uthmani", ResourceID: "text_uthmani"},
+	{ID: "Imlaei", Label: "Imlaei", ResourceID: "text_imlaei"},
+	{ID: "Indopak", Label: "Indopak", ResourceID: "text_indopak"},
+	{ID: "Uthmani", Label: "Uthmani", ResourceID: "text_uthmani"},
 }
 
 func NewTextType(id string) TextType {
@@ -43,7 +43,7 @@ func (t TextType) GetID() string {
 }
 
 func (t TextType) GetName() string {
-	return t.getBackendTextType().Name
+	return t.getBackendTextType().Label
 }
 
 func (t TextType) GetResourceID() string {
@@ -78,14 +78,14 @@ const (
 
 type backendTranslation struct {
 	ID         string
-	Name       string
+	Label      string
 	ResourceID int
 }
 
 var backendTranslations = []backendTranslation{
-	{ID: "MustafaKhattab", Name: "Mustafa Khattab", ResourceID: 131},
-	{ID: "YusufAli", Name: "Abdullah Yusuf Ali", ResourceID: 22},
-	{ID: "AbdulHaleem", Name: "M.A.S. Abdel Haleem", ResourceID: 85},
+	{ID: "MustafaKhattab", Label: "Mustafa Khattab", ResourceID: 131},
+	{ID: "YusufAli", Label: "Abdullah Yusuf Ali", ResourceID: 22},
+	{ID: "AbdulHaleem", Label: "M.A.S. Abdel Haleem", ResourceID: 85},
 }
 
 func NewTranslation(id string) Translation {
@@ -110,7 +110,7 @@ func (t Translation) GetID() string {
 }
 
 func (t Translation) GetName() string {
-	return t.getBackendTranslation().Name
+	return t.getBackendTranslation().Label
 }
 
 func (t Translation) GetResourceID() int {
