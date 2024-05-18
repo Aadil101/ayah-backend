@@ -8,16 +8,15 @@ import (
 
 	"github.com/Aadil101/ayah-backend/pkg/internal"
 
-	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
 
+var handler = NewHandler()
+
 func TestPingHandler(t *testing.T) {
-	router := gin.Default()
-	router.GET("/ping", Ping)
 	writer := httptest.NewRecorder()
 	request, _ := http.NewRequest("GET", "/ping", nil)
-	router.ServeHTTP(writer, request)
+	handler.ServeHTTP(writer, request)
 
 	var pingResponse struct {
 		Message string `json:"message"`
@@ -29,33 +28,28 @@ func TestPingHandler(t *testing.T) {
 }
 
 func TestGetRandomVerseHandler(t *testing.T) {
-	router := gin.Default()
-	router.GET("/verse/random", GetRandomVerse)
 	writer := httptest.NewRecorder()
 	var verse internal.Verse
 
 	request, _ := http.NewRequest("GET", "/verse/random", nil)
-	router.ServeHTTP(writer, request)
+	handler.ServeHTTP(writer, request)
 	json.Unmarshal(writer.Body.Bytes(), &verse)
 	assert.Equal(t, http.StatusOK, writer.Code)
 	assert.NotEqual(t, internal.Verse{}, verse)
 }
 
 func TestGetVerseHandler(t *testing.T) {
-	router := gin.Default()
-	router.GET("/verse/by_key/:chapterID/:verseID", GetVerse)
 	var verse internal.Verse
 
 	request, _ := http.NewRequest("GET", "/verse/by_key/invalid/invalid", nil)
 	writer := httptest.NewRecorder()
-	router.ServeHTTP(writer, request)
+	handler.ServeHTTP(writer, request)
 	json.Unmarshal(writer.Body.Bytes(), &verse)
-	assert.Equal(t, http.StatusOK, writer.Code)
-	assert.Equal(t, internal.Verse{}, verse)
+	assert.Equal(t, http.StatusInternalServerError, writer.Code)
 
 	request, _ = http.NewRequest("GET", "/verse/by_key/1/1", nil)
 	writer = httptest.NewRecorder()
-	router.ServeHTTP(writer, request)
+	handler.ServeHTTP(writer, request)
 	json.Unmarshal(writer.Body.Bytes(), &verse)
 	assert.Equal(t, http.StatusOK, writer.Code)
 	assert.Equal(t, internal.Verse{
@@ -66,7 +60,7 @@ func TestGetVerseHandler(t *testing.T) {
 
 	request, _ = http.NewRequest("GET", "/verse/by_key/1/1?textType=invalid&translation=invalid", nil)
 	writer = httptest.NewRecorder()
-	router.ServeHTTP(writer, request)
+	handler.ServeHTTP(writer, request)
 	json.Unmarshal(writer.Body.Bytes(), &verse)
 	assert.Equal(t, http.StatusOK, writer.Code)
 	assert.Equal(t, internal.Verse{
@@ -77,7 +71,7 @@ func TestGetVerseHandler(t *testing.T) {
 
 	request, _ = http.NewRequest("GET", "/verse/by_key/1/1?textType=Indopak&translation=YusufAli", nil)
 	writer = httptest.NewRecorder()
-	router.ServeHTTP(writer, request)
+	handler.ServeHTTP(writer, request)
 	json.Unmarshal(writer.Body.Bytes(), &verse)
 	assert.Equal(t, http.StatusOK, writer.Code)
 	assert.Equal(t, internal.Verse{
@@ -88,13 +82,11 @@ func TestGetVerseHandler(t *testing.T) {
 }
 
 func TestGetTextTypes(t *testing.T) {
-	router := gin.Default()
-	router.GET("resources/textTypes", GetTextTypes)
 	var ttr internal.TextTypesResponse
 
 	request, _ := http.NewRequest("GET", "/resources/textTypes", nil)
 	writer := httptest.NewRecorder()
-	router.ServeHTTP(writer, request)
+	handler.ServeHTTP(writer, request)
 	json.Unmarshal(writer.Body.Bytes(), &ttr)
 
 	assert.Equal(t, http.StatusOK, writer.Code)
@@ -106,13 +98,11 @@ func TestGetTextTypes(t *testing.T) {
 }
 
 func TestGetTranslations(t *testing.T) {
-	router := gin.Default()
-	router.GET("resources/translations", GetTranslations)
 	var tr internal.TranslationsResponse
 
 	request, _ := http.NewRequest("GET", "/resources/translations", nil)
 	writer := httptest.NewRecorder()
-	router.ServeHTTP(writer, request)
+	handler.ServeHTTP(writer, request)
 	json.Unmarshal(writer.Body.Bytes(), &tr)
 
 	assert.Equal(t, http.StatusOK, writer.Code)

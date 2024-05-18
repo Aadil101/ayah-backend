@@ -1,17 +1,17 @@
 package main
 
 import (
-	"github.com/Aadil101/ayah-backend/pkg/handler"
+	"log"
+	"net/http"
 
-	"github.com/gin-gonic/gin"
+	"github.com/Aadil101/ayah-backend/pkg/handler"
 )
 
 func main() {
-	router := gin.Default()
-	router.GET("/ping", handler.Ping)
-	router.GET("/verse/random", handler.GetRandomVerse)
-	router.GET("/verse/by_key/:chapterID/:verseID", handler.GetVerse)
-	router.GET("/resources/textTypes", handler.GetTextTypes)
-	router.GET("/resources/translations", handler.GetTranslations)
-	router.Run() // listen and serve on 0.0.0.0:8080
+	server := &http.Server{
+		Addr:    ":8080",
+		Handler: handler.NewHandler(),
+	}
+	log.Println("Listening...")
+	log.Fatal(server.ListenAndServe())
 }
